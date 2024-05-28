@@ -1,4 +1,6 @@
 defmodule TodoServer do
+  use GenServer
+  
   def init do
       {:ok, TodoList.new()}
   end
