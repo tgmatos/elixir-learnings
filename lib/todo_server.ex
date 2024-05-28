@@ -1,42 +1,42 @@
 defmodule TodoServer do
   def init do
-      TodoList.new()
+      {:ok, TodoList.new()}
   end
 
-  def handle_call({:get, date}, state) do
-    {TodoList.entries(state, date), state}
+  def handle_call({:get, date}, _, state) do
+    {:reply, TodoList.entries(state, date), state}
   end
 
   def handle_cast({:put, request}, state) do
-    TodoList.add_entry(state, request)
+    {:noreply, TodoList.add_entry(state, request)}
   end
   
   def handle_cast({:update, entry}, state) do
-    TodoList.update_entry(state, entry.id, &Map.put(&1, entry.key, entry.value))
+    {:noreply, TodoList.update_entry(state, entry.id, &Map.put(&1, entry.key, entry.value)), state}
   end
 
   def handle_cast({:delete, key}, state) do
-    TodoList.delete_entry(state, key)
+    {:noreply, TodoList.delete_entry(state, key), state}
   end
 
   def start do
-    ServerProcess.start(TodoServer)
+    GenServer.start(TodoServer, nil, name: TodoServer)
   end
 
-  def get(pid, date) do
-    ServerProcess.call(pid, {:get, date})
+  def get(date) do
+    GenServer.call(TodoServer, {:get, date})
   end
 
-  def put(pid, request) do
-    ServerProcess.cast(pid, {:put, request})
+  def put(request) do
+    GenServer.cast(TodoServer, {:put, request})
   end
 
-  def update(pid, key, value) do
-    ServerProcess.cast(pid, {:update, key, value})
+  def update(key, value) do
+    GenServer.cast(TodoServer, {:update, key, value})
   end
 
-  def delete(pid, key) do
-    ServerProcess.cast(pid, {:delete, key})
+  def delete(key) do
+    GenServer.cast(TodoServer, {:delete, key})
   end
 
 end
