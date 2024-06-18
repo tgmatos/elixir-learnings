@@ -23,6 +23,7 @@ defmodule Todo.Server do
 
   @impl GenServer
   def init(list_name) do
+    IO.puts("Starting Todo.Database process")
     {:ok, {list_name, nil}, {:continue, :init}}
   end
 

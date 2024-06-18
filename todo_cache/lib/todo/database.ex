@@ -21,6 +21,7 @@ defmodule Todo.Database do
   
   @impl GenServer
   def init(_) do
+    IO.puts("Starting Todo.Database process")
     File.mkdir_p!(@db_folder)
     {:ok, start_workers()}
   end
