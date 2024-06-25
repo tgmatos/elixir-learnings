@@ -1,10 +1,10 @@
 defmodule Todo.List do
-  defstruct next_id: 1, entries: %{}
+  defstruct name: nil, next_id: 1, entries: %{}
 
-  def new(entries \\ []) do
+  def new(name, entries \\ []) do
     Enum.reduce(
       entries,
-      %Todo.List{},
+      %Todo.List{name: name},
       &add_entry(&2, &1)
     )
   end

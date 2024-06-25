@@ -14,7 +14,7 @@ defmodule Todo.Cache do
     IO.puts("Starting Todo.Cache process")
     {:ok, %{}}
   end
-  
+
   @impl GenServer
   def handle_call({:server_process, todo_list_name}, _, todo_servers) do
     case Map.fetch(todo_servers, todo_list_name) do

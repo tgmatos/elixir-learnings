@@ -4,9 +4,10 @@ defmodule Todo.System do
       [
         Todo.ProcessRegistry,
         Todo.Database,
-        Todo.Cache,
+        Todo.Cache
       ],
       strategy: :one_for_one,
-    name: Todo.System)
+      name: Todo.System
+    )
   end
 end

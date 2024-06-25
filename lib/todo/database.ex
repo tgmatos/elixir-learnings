@@ -5,9 +5,15 @@ defmodule Todo.Database do
   def start_link do
     IO.puts("Starting database server.")
     File.mkdir_p!(@db_folder)
-    
+
     children = Enum.map(1..@pool_size, &worker_spec/1)
     Supervisor.start_link(children, strategy: :one_for_one)
+  end
+
+  def store_all(key, data) do
+    key
+    |> choose_worker
+    |> Todo.DatabaseWorkers.store_all(key, data)
   end
 
   def store(key, data) do
@@ -15,7 +21,7 @@ defmodule Todo.Database do
     |> choose_worker
     |> Todo.DatabaseWorkers.store(key, data)
   end
-
+  
   def get(key) do
     key
     |> choose_worker
@@ -24,9 +30,7 @@ defmodule Todo.Database do
 
   def worker_spec(worker_id) do
     default_worker_spec = {Todo.DatabaseWorkers, {@db_folder, worker_id}}
-    a = Supervisor.child_spec(default_worker_spec, id: worker_id)
-    IO.inspect(a)
-    a
+    Supervisor.child_spec(default_worker_spec, id: worker_id)
   end
 
   def child_spec(_) do
@@ -36,7 +40,7 @@ defmodule Todo.Database do
       type: :supervisor
     }
   end
-  
+
   defp choose_worker(key) do
     :erlang.phash2(key, @pool_size) + 1
   end
