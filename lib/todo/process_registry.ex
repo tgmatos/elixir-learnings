@@ -1,6 +1,7 @@
 defmodule Todo.ProcessRegistry do
+  require Logger
   def start_link do
-    IO.puts("Starting ProcessRegistry")
+    Logger.info("Starting ProcessRegistry")
     Registry.start_link(keys: :unique, name: __MODULE__)
   end
 

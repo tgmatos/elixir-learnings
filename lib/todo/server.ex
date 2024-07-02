@@ -1,4 +1,5 @@
 defmodule Todo.Server do
+  require Logger
   use GenServer
 
   def start_link(name) do
@@ -17,14 +18,6 @@ defmodule Todo.Server do
     GenServer.cast(pid, {:put, request})
   end
 
-  # def update(pid, key, value) do
-  #   GenServer.cast(pid, {:update, key, value})
-  # end
-
-  # def delete(pid, key) do
-  #   GenServer.cast(pid, {:delete, key})
-  # end
-
   @impl GenServer
   def init(list_name) do
     IO.puts("Starting Todo.Database process")
@@ -39,8 +32,8 @@ defmodule Todo.Server do
 
   @impl GenServer
   def handle_call({:get, date}, _, {name, todo_list}) do
-    IO.inspect(todo_list)
-
+    Logger.info("todo_list: #{todo_list}")
+    
     {
       :reply,
       Todo.List.entries(todo_list, date),

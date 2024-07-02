@@ -1,9 +1,10 @@
 defmodule Todo.Database do
+  require Logger
   @db_folder "./persist"
   @pool_size 3
 
   def start_link do
-    IO.puts("Starting database server.")
+    Logger.info("Started Database")
     File.mkdir_p!(@db_folder)
 
     children = Enum.map(1..@pool_size, &worker_spec/1)

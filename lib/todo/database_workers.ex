@@ -1,4 +1,5 @@
 defmodule Todo.DatabaseWorkers do
+  require Logger
   alias Exqlite.Sqlite3
   use GenServer
   defstruct conns: %{}
@@ -29,6 +30,7 @@ defmodule Todo.DatabaseWorkers do
 
   @impl GenServer
   def init(state) do
+    Logger.info("DBWorker start")
     {:ok, {state, %Todo.DatabaseWorkers{}}}
   end
 
@@ -72,7 +74,7 @@ defmodule Todo.DatabaseWorkers do
 
   @impl GenServer
   def handle_call({:get, key}, _, state) do
-    IO.inspect(key)
+    Logger.info("Key: #{key}")
     {folder, connections} = state
     
     {data, conns} =
